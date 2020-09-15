@@ -11,7 +11,7 @@ SELECT *
 FROM ships s
 RIGHT JOIN classes c ON s.class LIKE c.class
 WHERE s.name IS NOT NULL OR c.class IN (SELECT DISTINCT name
-										FROM ships)
+					FROM ships)
 ORDER BY s.name;
 
 --3
@@ -19,7 +19,7 @@ SELECT c.country, s.name
 FROM ships s
 JOIN classes c ON s.class LIKE c.class
 LEFT JOIN outcomes o ON s.name LIKE o.ship
-WHERE o.ship is NULL
+WHERE o.ship IS NULL
 ORDER BY c.country;
 
 --4
