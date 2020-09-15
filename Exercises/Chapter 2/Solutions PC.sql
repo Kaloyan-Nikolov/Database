@@ -44,6 +44,6 @@ WHERE a.model < b.model
 SELECT DISTINCT maker
 FROM product p 
 WHERE model in (SELECT model
-				FROM pc 
-				WHERE speed > 400 
-				GROUP BY model HAVING COUNT(model)>1);
+		FROM pc 
+		WHERE speed > 400 
+		GROUP BY model HAVING COUNT(model)>1);
