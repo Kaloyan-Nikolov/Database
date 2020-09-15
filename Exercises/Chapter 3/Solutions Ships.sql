@@ -9,7 +9,7 @@ WHERE numguns >= ALL(SELECT numguns
 --2
 SELECT DISTINCT class 
 FROM ships
-WHERE name in (SELECT ship
+WHERE name IN (SELECT ship
 	       FROM outcomes
 	       WHERE result LIKE 'sunk');
 
