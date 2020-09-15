@@ -4,9 +4,9 @@ USE movies
 SELECT name 
 FROM moviestar
 WHERE gender LIKE 'M' and name IN ( SELECT starname 
-				      FROM starsin 
-				      WHERE movietitle LIKE 
-				      'The Usual Suspects' );
+				    FROM starsin 
+				    WHERE movietitle LIKE 
+				    'The Usual Suspects' );
 
 --2
 SELECT n.starname 
@@ -24,20 +24,20 @@ WHERE m.studioname LIKE 'MGM'
 SELECT title
 FROM movie
 WHERE length > (SELECT length 
-		  FROM movie
-		  WHERE title LIKE 'star wars');
+		FROM movie
+		WHERE title LIKE 'star wars');
 
 --5
 SELECT name 
 FROM movieexec
 WHERE networth > (SELECT networth
-		     FROM movieexec
-		     WHERE name LIKE 'stephen spielberg'); 
+		  FROM movieexec
+		  WHERE name LIKE 'stephen spielberg'); 
 
 --6
 SELECT m.title
 FROM movie m
 JOIN movieexec n ON n.CERT# = m.PRODUCERC#
 WHERE n.NETWORTH > (SELECT NETWORTH
-		      FROM MOVIEEXEC
-		      WHERE name LIKE 'stephen spielberg');
+		    FROM MOVIEEXEC
+		    WHERE name LIKE 'stephen spielberg');
