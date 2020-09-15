@@ -11,8 +11,8 @@ select s.name, c.DISPLACEMENT, c.NUMGUNS
 from classes c
 JOIN ships s ON c.class = s.class
 where s.name IN (SELECT ship
-				 FROM outcomes
-				 WHERE battle LIKE 'Guadalcanal') 
+		 FROM outcomes
+		 WHERE battle LIKE 'Guadalcanal') 
 
 --3
 SELECT DISTINCT a.country 
