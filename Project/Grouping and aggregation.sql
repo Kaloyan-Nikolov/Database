@@ -8,9 +8,9 @@
 SELECT s1.gallery, COUNT(DISTINCT artist) AS number_of_artists 
 FROM sculptures s1
 WHERE s1.artist IN (SELECT artist 
-					          FROM sculptures
-					          GROUP BY artist
-					          HAVING COUNT(*) > 1 AND AVG([estimate(EURO)]) > 100000)
+		    FROM sculptures
+		    GROUP BY artist
+		    HAVING COUNT(*) > 1 AND AVG([estimate(EURO)]) > 100000)
 GROUP BY s1.gallery
 ORDER BY number_of_artists DESC
 GO
@@ -24,11 +24,11 @@ SELECT gallery, COUNT(*) AS cards, CAST(AVG(price) AS DECIMAL(4,2)) AS avg_price
 FROM membership_cards m
 GROUP BY gallery
 HAVING AVG(m.price) <= ALL(SELECT AVG(price)
-						               FROM membership_cards
-						                GROUP BY gallery)
+			   FROM membership_cards
+			   GROUP BY gallery)
 OR AVG(m.price) >= ALL(SELECT AVG(price)
-						FROM membership_cards
-						GROUP BY gallery)
+		       FROM membership_cards
+		       GROUP BY gallery)
 GO
 
 -- QUERY 3
@@ -40,8 +40,8 @@ SELECT artist, COUNT(*) AS number_of_sculptures, MAX([estimate(EURO)]) AS most_e
 		AVG([estimate(EURO)]) AS avg_price
 FROM sculptures 
 WHERE artist in (SELECT name
-				FROM artists
-				WHERE died IS NULL)
+		 FROM artists
+		 WHERE died IS NULL)
 GROUP BY artist
 GO
 
@@ -66,16 +66,16 @@ GO
 
 SELECT t.gallery_name, COUNT(*) AS exhibit_count
 FROM (SELECT g.name AS gallery_name, p.name AS exhibit_name
-	  FROM galleries g
-	  JOIN paintings p ON p.gallery = g.name
-	  UNION
-	  SELECT g.name AS gallery_name, a.name AS exhibit_name
-	  FROM galleries g
-	  JOIN artefacts a ON a.gallery = g.name
-	  UNION
-	  SELECT g.name AS gallery_name, s.name AS exhibit_name
-	  FROM galleries g
-	  JOIN sculptures s ON s.gallery = g.name) t
+      FROM galleries g
+      JOIN paintings p ON p.gallery = g.name
+      UNION
+      SELECT g.name AS gallery_name, a.name AS exhibit_name
+      FROM galleries g
+      JOIN artefacts a ON a.gallery = g.name
+      UNION
+      SELECT g.name AS gallery_name, s.name AS exhibit_name
+      FROM galleries g
+      JOIN sculptures s ON s.gallery = g.name) t
 GROUP BY t.gallery_name
 ORDER BY exhibit_count DESC
 GO
@@ -87,23 +87,23 @@ GO
 
 SELECT gallery, artist, COUNT(*) AS number_exhibits
 FROM ( SELECT g.name AS gallery, p.name AS exhibit_name, artist
-	FROM galleries g
-	JOIN paintings p ON p.gallery = g.name
-	UNION ALL
-	SELECT g.name AS gallery, s.name AS exhibit_name, artist
-	FROM galleries g
-	JOIN sculptures s ON s.gallery = g.name ) d
+       FROM galleries g
+       JOIN paintings p ON p.gallery = g.name
+       UNION ALL
+       SELECT g.name AS gallery, s.name AS exhibit_name, artist
+       FROM galleries g
+       JOIN sculptures s ON s.gallery = g.name ) d
 GROUP BY gallery, artist
 HAVING COUNT(*) >= ALL(SELECT COUNT(*)
-				   FROM ( SELECT g.name AS gallery, p.name AS exhibit_name, artist
-						  FROM galleries g
-						  JOIN paintings p ON p.gallery = g.name
-						  UNION ALL
-						  SELECT g.name AS gallery, s.name AS exhibit_name, artist
-						  FROM galleries g
-						  JOIN sculptures s ON s.gallery = g.name ) d2
-					WHERE d.gallery = d2.gallery
-					GROUP BY gallery, artist)
+		   FROM ( SELECT g.name AS gallery, p.name AS exhibit_name, artist
+			  FROM galleries g
+			  JOIN paintings p ON p.gallery = g.name
+			  UNION ALL
+			  SELECT g.name AS gallery, s.name AS exhibit_name, artist
+			  FROM galleries g
+			  JOIN sculptures s ON s.gallery = g.name ) d2
+		   WHERE d.gallery = d2.gallery
+		   GROUP BY gallery, artist)
 ORDER BY gallery
 GO
 
@@ -115,9 +115,9 @@ GO
 
 SELECT t.gallery, t.cards, t.profit, g.most_famous_exhibit, g.halls
 FROM (SELECT gallery, SUM(price) AS profit, COUNT(*) AS cards
-	FROM membership_cards 
-	GROUP BY gallery
-	HAVING SUM(price) > 1250 AND COUNT(*) >= 23 ) t
+      FROM membership_cards 
+      GROUP BY gallery
+      HAVING SUM(price) > 1250 AND COUNT(*) >= 23 ) t
 JOIN galleries g ON t.gallery = g.name
 WHERE g.halls > 2
 ORDER BY cards DESC
@@ -129,7 +129,7 @@ GO
 -- Да се изведат освен името му, колко е разликата в годините и какъв е стилът, в който твори.
 
 SELECT TOP 1 p1.artist, ((MAX(p1.year)) - (MIN(p1.year))) AS diff, (SELECT a.style FROM artists a 
-																	WHERE a.name = p1.artist)	AS style												 
+								    WHERE a.name = p1.artist)	AS style												 
 FROM paintings p1
 GROUP BY p1.artist
 ORDER BY diff DESC, artist
@@ -144,11 +144,11 @@ GO
 SELECT a1.catalog_number, a1.name, a1.material, a1.[estimate(EURO)]
 FROM artefacts a1 
 WHERE gallery LIKE 'Ancient Greece' AND 
-	(SELECT COUNT(*) 
+     (SELECT COUNT(*) 
      FROM artefacts 
      WHERE gallery = a1.gallery AND [estimate(EURO)] <= a1.[estimate(EURO)]) = (SELECT COUNT(*) 
-													  FROM artefacts
-													  WHERE gallery = a1.gallery AND [estimate(EURO)] >= a1.[estimate(EURO)]);
+							FROM artefacts
+							WHERE gallery = a1.gallery AND [estimate(EURO)] >= a1.[estimate(EURO)]);
 GO
 
 --QUERY 10
@@ -160,9 +160,9 @@ GO
 SELECT p1.gallery,  COUNT(*) AS number_paintings, AVG(p1.[estimate(EURO)]) AS avg_price
 FROM paintings p1
 where (CAST(p1.[height(mm)] AS INT) * CAST(p1.[width(mm)] AS INT)) >=  
-		(SELECT MAX(CAST(p2.[height(mm)] AS INT) * CAST(p2.[width(mm)] AS INT))
-		FROM paintings p2
-		WHERE p2.artist LIKE 'Josef Abel' )
+	(SELECT MAX(CAST(p2.[height(mm)] AS INT) * CAST(p2.[width(mm)] AS INT))
+	 FROM paintings p2
+	 WHERE p2.artist LIKE 'Josef Abel' )
 GROUP BY p1.gallery
 HAVING COUNT(*) > 2
 ORDER BY avg_price
